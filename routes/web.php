@@ -1,21 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\faktur_penjualanController; // nama asli controller
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -27,5 +17,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/faktur_penjualan/kelola/{id}', [faktur_penjualanController::class, 'kelola'])->name('faktur-penjualan.kelola');
+Route::resource('faktur_penjualan', faktur_penjualanController::class)->except(['show']);
+
+Route::get('/faktur_penjualan/kelola/{id}', [faktur_penjualanController::class, 'kelola']);
+Route::post('/kwitansi', [faktur_penjualanController::class, 'storeKwitansi']);
+Route::delete('/kwitansi/{id}', [faktur_penjualanController::class, 'destroyKwitansi'])->name('kwitansi.destroy');
 
 require __DIR__.'/auth.php';
