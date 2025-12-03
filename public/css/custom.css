@@ -137,3 +137,24 @@ h1, h2, h3, h4, h5, h6 {
     color: #ead196 !important;
     text-transform: none !important;
 }
+
+.nav-link:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+    border-radius: 5px;
+}
+
+.nav-link.text-warning:hover {
+    color: #ffc107 !important;
+    background-color: rgba(255,193,7,0.1) !important;
+}
+
+.nav-link.text-danger:hover {
+    color: #e74a3b !important;
+    background-color: rgba(231,74,59,0.1) !important;
+}
+
+/* Efek untuk link aktif */
+.nav-item.active .nav-link {
+    background-color: rgba(255,255,255,0.15);
+    border-left: 4px solid #fff;
+}
