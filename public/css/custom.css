@@ -1,0 +1,139 @@
+/* custom.css */
+:root {
+    --primary: #7d0b0b !important;       /* Merah jadi primary */
+    --secondary: #FFFFFF !important;     /* Putih jadi secondary/aksen */
+    --accent: #ead196 !important;        /* Gold jadi aksen */
+    --blue: #7d0b0b !important;          /* Override --blue dengan merah */
+}
+
+body {
+    color: #212121 !important;           /* Warna teks utama netral */
+}
+
+/* Override untuk elemen dengan warna primer (MERAH) */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #FFFFFF !important;           /* Teks putih di tombol merah */
+}
+
+.btn-primary:hover {
+    background-color: #5d0707 !important; /* Merah lebih gelap saat hover */
+    border-color: #5d0707 !important;
+    color: #FFFFFF !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;    /* Teks merah */
+}
+
+.border-left-primary {
+    border-left-color: var(--primary) !important;
+}
+
+.badge-primary {
+    background-color: var(--primary) !important;
+    color: #FFFFFF !important;           /* Teks putih di badge merah */
+}
+
+/* HAPUS GRADASI - hanya warna solid merah */
+.bg-gradient-primary {
+    background-color: var(--primary) !important;
+    background-image: none !important; /* Hilangkan gradasi */
+}
+
+/* Untuk judul - gunakan Circular Std Bold */
+h1, h2, h3, h4, h5, h6 {
+    color: #7d0b0b !important;           /* Judul merah */
+    font-family: 'Circular Std Bold', 'Montserrat', 'Segoe UI', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+.navbar-brand, .sidebar-brand {
+    color: #ead196 !important;           /* Brand merah */
+    font-family: 'Circular Std Bold', 'Montserrat', 'Segoe UI', sans-serif !important;
+}
+
+/* Warna sekunder (PUTIH) untuk aksen */
+.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;  /* Teks putih */
+}
+
+.btn-secondary {
+    background-color: var(--secondary) !important;
+    border-color: #ddd !important;
+    color: #7d0b0b !important;           /* Teks merah di tombol putih */
+}
+
+.btn-secondary:hover {
+    background-color: #f8f9fa !important;
+    border-color: #ccc !important;
+    color: #7d0b0b !important;
+}
+
+/* Border dengan warna putih */
+.border-left-secondary {
+    border-left-color: var(--secondary) !important;
+}
+
+/* Badge dengan warna putih */
+.badge-secondary {
+    background-color: var(--secondary) !important;
+    color: #7d0b0b !important;           /* Teks merah di badge putih */
+    border: 1px solid #ddd !important;
+}
+
+/* Warna aksen (GOLD) untuk elemen tambahan */
+.bg-accent {
+    background-color: var(--accent) !important;
+}
+
+.text-accent {
+    color: var(--accent) !important;     /* Teks gold */
+}
+
+.btn-accent {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #7d0b0b !important;           /* Teks merah di tombol gold */
+}
+
+.btn-accent:hover {
+    background-color: #d9c084 !important;
+    border-color: #d4b97a !important;
+    color: #7d0b0b !important;
+}
+
+.border-left-accent {
+    border-left-color: var(--accent) !important;
+}
+
+.badge-accent {
+    background-color: var(--accent) !important;
+    color: #7d0b0b !important;           /* Teks merah di badge gold */
+}
+
+/* Tombol gold dengan border */
+.btn-outline-accent {
+    background-color: transparent !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+.btn-outline-accent:hover {
+    background-color: var(--accent) !important;
+    color: #7d0b0b !important;
+}
+
+.sidebar-brand-text {
+    color: #ead196 !important;
+    text-transform: none !important;
+}

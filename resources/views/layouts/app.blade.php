@@ -19,6 +19,8 @@
 
     <!-- Custom styles for this template-->
     <link href=" {{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}?v={{ time() }}" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=circular-std@700&display=swap" rel="stylesheet">
 
 </head>
 
@@ -46,7 +48,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Famaindo 8kreasi Audia</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Selamat Datang!</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>

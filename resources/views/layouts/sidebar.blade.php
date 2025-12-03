@@ -3,11 +3,11 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <!-- Ganti icon dengan logo PNG -->
+                    <img src="{{ asset('img/logo-famaindo.png') }}" alt="Famaindo Logo" style="height: 40px;">
                 </div>
-                <div class="sidebar-brand-text mx-3">Famaindo 8kreasi Audia</div>
+                <div class="sidebar-brand-text mx-3">Famaindo Delapan Kreasi</div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
