@@ -31,8 +31,9 @@
         <!-- Hanya halaman login (tanpa sidebar/navbar) -->
         @yield('content')
         
-    @elseif(auth()->check() && auth()->user()->role === 'admin')
-        <!-- ==================== LAYOUT UNTUK ADMIN YANG SUDAH LOGIN ==================== -->
+    @elseif(auth()->check())
+        <!-- ==================== LAYOUT UNTUK SEMUA USER YANG SUDAH LOGIN ==================== -->
+        <!-- (tanpa perlu cek role) -->
         <div id="wrapper">
             <!-- Sidebar -->
             @include('layouts.sidebar')
@@ -146,16 +147,16 @@
     <!-- Core plugin JavaScript-->
     <script src="{{asset('vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
-    @if(auth()->check() && auth()->user()->role === 'admin')
-        <!-- Custom scripts for all pages (hanya untuk admin)-->
+    @if(auth()->check())
+        <!-- Custom scripts for all pages (hanya untuk user yang login)-->
         <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
 
-        <!-- Page level plugins (hanya untuk admin) -->
+        <!-- Page level plugins (hanya untuk user yang login) -->
         <script src="{{asset('vendor/chart.js/Chart.min.js')}}"></script>
         <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
-        <!-- Page level custom scripts (hanya untuk admin) -->
+        <!-- Page level custom scripts (hanya untuk user yang login) -->
         <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
         <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
         <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
@@ -163,5 +164,3 @@
 
     @stack('scripts')
 </body>
-
-</html>

@@ -11,62 +11,84 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Home/Welcome Link -->
+    <!-- Halaman Utama -->
     <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('dashboard') }}">
-            <i class="fas fa-home text-warning"></i>
-            <span class="text-warning">Halaman Utama</span>
+            <i class="fas fa-home"></i>
+            <span>Halaman Utama</span>
         </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
+    <!-- Heading: Menu Kelola -->
     <div class="sidebar-heading">
         Menu Kelola
     </div>
 
-    <!-- Nav Item - Kelola Pemesanan -->
+    <!-- Kelola Pemesanan -->
     <li class="nav-item {{ request()->is('faktur_penjualan*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('faktur_penjualan.index') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-file-invoice"></i>
             <span>Kelola Pemesanan</span>
+        </a>
+    </li>
+
+    <!-- Kelola Akun -->
+    <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('users.index') }}">
+            <i class="fas fa-users"></i>
+            <span>Kelola Akun</span>
         </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
+    <!-- Heading: Akun -->
     <div class="sidebar-heading">
         Akun
     </div>
 
-    <!-- User Info -->
+    <!-- Info User -->
     <li class="nav-item">
         <div class="nav-link">
             <i class="fas fa-user-circle"></i>
             <span>
-                {{ auth()->user()->nama ?? 'Admin' }}
-                <small class="d-block text-light">Role: {{ auth()->user()->role ?? 'Admin' }}</small>
+                {{ auth()->user()->name ?? 'Admin' }}
+                <small class="d-block text-light">
+                    {{ auth()->user()->email ?? '-' }}
+                </small>
             </span>
         </div>
     </li>
 
-    <!-- Logout Button dengan Style -->
+    <!-- Edit Profile (jika ada) -->
+    @if(Route::has('profile.edit'))
+    <li class="nav-item {{ request()->is('profile') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('profile.edit') }}">
+            <i class="fas fa-user-edit"></i>
+            <span>Edit Profile</span>
+        </a>
+    </li>
+    @endif
+
+    <!-- Logout -->
     <li class="nav-item">
         <a class="nav-link" href="#" onclick="return confirmLogout(event)">
-            <i class="fas fa-sign-out-alt text-danger"></i>
-            <span class="text-danger">🚪 Logout</span>
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
     </li>
 
+    <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
+    <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
