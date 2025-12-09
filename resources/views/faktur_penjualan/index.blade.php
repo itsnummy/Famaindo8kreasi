@@ -35,7 +35,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Data Pemesanan</h6>
                         </div>
                         <div class="card-body">
-                            <a class="btn btn-primary mb-3" href="{{route('faktur_penjualan.create')}}">Tambah Data</a>
+                            <a class="btn btn-primary mb-3" href="{{route('faktur_penjualan.create')}}"><i class="fas fa-plus"></i> Tambah Pemesanan</a>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -61,16 +61,16 @@
                                          <td>
                                             {{-- TOMBOL KELOLA --}}
                                            <a href="/faktur_penjualan/kelola/{{ $faktur->no_transaksi }}"
-                                            class="btn btn-sm btn-info">
+                                            class="btn btn-sm btn-danger">
                                                 <i class="fas fa-cog"></i> Kelola
                                             </a>
 
-                                            <a class="btn btn-sm btn-primary" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}">Ubah</a>
+                                            <a class="btn btn-sm btn-warning" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}"><i class="fas fa-edit"></i></a>
 
                                             <form action="{{ route('faktur_penjualan.destroy', $faktur->no_transaksi) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-sm btn-danger" onclick="return confirm('Anda Yakin ingin Menghapus Data?')">Hapus</button>
+                                                <button class="btn btn-sm btn-primary" onclick="return confirm('Anda Yakin ingin Menghapus Data?')"><i class="fas fa-trash"></i></button>
                                             </form>
                                         </td>
                                         </tr>

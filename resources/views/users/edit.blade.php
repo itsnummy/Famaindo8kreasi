@@ -34,14 +34,20 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password">Password Baru (kosongkan jika tidak ingin mengganti)</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                   id="password" name="password">
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="form-text text-muted">Minimal 6 karakter</small>
-                        </div>
+                        <label for="password">Password Baru (kosongkan jika tidak ingin mengganti)</label>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                            id="password" name="password">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="form-text text-muted">Minimal 6 karakter</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi Password Baru</label>
+                        <input type="password" class="form-control" 
+                            id="password_confirmation" name="password_confirmation">
+                    </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">
