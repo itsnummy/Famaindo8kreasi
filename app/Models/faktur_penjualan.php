@@ -22,4 +22,8 @@ class faktur_penjualan extends Model
         'tunai', 'tanggal', 'id_user', 'tgl_jt', 'subtotal', 'keterangan',
         'K_Debit', 'DP_PO', 'jml', 'K_Kredit', 'pajak', 'terbilang'
     ];
+    public function kwitansi()
+{
+    return $this->hasMany(Kwitansi::class, 'no_transaksi', 'no_transaksi');
+}
 }

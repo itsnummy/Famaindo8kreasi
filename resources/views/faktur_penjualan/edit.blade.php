@@ -50,8 +50,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Kontak WA</label>
-                                <input type="number" class="form-control" name="kontak_wa" placeholder="Nomor Whatsapp" value="{{ $data->kontak_wa }}">
+                                <label>Kontak WA *</label>
+                                <input type="number" class="form-control" name="kontak_wa" placeholder="Nomor Whatsapp Aktif" value="{{ $data->kontak_wa }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">

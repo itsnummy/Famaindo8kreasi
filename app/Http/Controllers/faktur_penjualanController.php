@@ -58,10 +58,11 @@ class faktur_penjualanController extends Controller
 
         return redirect('faktur_penjualan')->with('success', 'Data Pemesanan berhasil ditambahkan');
     }
-        public function edit(faktur_penjualan $faktur_penjualan)
-        {
-            return view('faktur_penjualan.edit')->with('data', $faktur_penjualan);
-        }
+
+    public function edit(faktur_penjualan $faktur_penjualan)
+    {
+        return view('faktur_penjualan.edit')->with('data', $faktur_penjualan);
+    }
 
     public function update(Request $request, faktur_penjualan $faktur_penjualan)
     {
@@ -72,7 +73,9 @@ class faktur_penjualanController extends Controller
             'jml' => 'required|numeric',
             'harga_satuan' => 'required|numeric',
         ]);
-    $faktur_penjualan->update(['tanggal' => $request->tanggal,
+        
+        $faktur_penjualan->update([
+            'tanggal' => $request->tanggal,
             'kode_sales' => $request->kode_sales,
             'pelanggan' => $request->pelanggan,
             'alamat' => $request->alamat,
@@ -95,63 +98,148 @@ class faktur_penjualanController extends Controller
             'K_Kredit' => $request->K_Kredit,
             'terbilang' => $request->terbilang,
             'kembali' => $request->kembali,
-            'keterangan' => $request->keterangan,]);
-return redirect('faktur_penjualan')->with('success', 'Data Pemesanan berhasil diperbarui');
-}
-
-public function destroy(faktur_penjualan $faktur_penjualan)
-{
-    $faktur_penjualan->delete();
-    return redirect('faktur_penjualan')->with('success','Data Berhasil Dihapus');
-}
-
-        public function kelola($id) 
-        {
-            // Cari faktur berdasarkan no_transaksi
-            $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
-            
-            if (!$faktur) {
-                abort(404, 'Data faktur tidak ditemukan');
-            }
-
-            $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
-            $totalDibayar = $kwitansi->sum('sejumlah');
-            $sisa = $faktur->total_akhir - $totalDibayar;
-
-            return view('faktur_penjualan.kelola.index-kelola', 
-                compact('faktur', 'kwitansi', 'totalDibayar', 'sisa'));
-        }
-
-    public function storeKwitansi(Request $request)
-{
-    $request->validate([
-        'no_transaksi' => 'required',
-        'sejumlah' => 'required|numeric|min:1',
-        'utk_pembayaran' => 'required',
-        'jenis' => 'required|in:1,2'
-    ]);
-
-    Kwitansi::create([
-        'no_transaksi' => $request->no_transaksi,
-        'sejumlah' => $request->sejumlah,
-        'utk_pembayaran' => $request->utk_pembayaran,
-        'jenis' => $request->jenis
-    ]);
-
-    return redirect()->back()->with('success', 'Pembayaran berhasil disimpan!');
-}
-
-public function destroyKwitansi($id)
-{
-    $kwitansi = Kwitansi::find($id);
-    
-    if (!$kwitansi) {
-        return redirect()->back()->with('error', 'Kwitansi tidak ditemukan');
+            'keterangan' => $request->keterangan,
+        ]);
+        
+        return redirect('faktur_penjualan')->with('success', 'Data Pemesanan berhasil diperbarui');
     }
 
-    $kwitansi->delete();
+    public function destroy(faktur_penjualan $faktur_penjualan)
+    {
+        $faktur_penjualan->delete();
+        return redirect('faktur_penjualan')->with('success','Data Berhasil Dihapus');
+    }
 
-    return redirect()->back()->with('success', 'Kwitansi berhasil dihapus');
+    public function kelola($id) 
+    {
+        // Cari faktur berdasarkan no_transaksi
+        $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
+        
+        if (!$faktur) {
+            abort(404, 'Data faktur tidak ditemukan');
+        }
+
+        $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
+        $totalDibayar = $kwitansi->sum('sejumlah');
+        $sisa = $faktur->total_akhir - $totalDibayar;
+
+        return view('faktur_penjualan.kelola.index-kelola', 
+            compact('faktur', 'kwitansi', 'totalDibayar', 'sisa'));
+    }
+
+    public function storeKwitansi(Request $request)
+    {
+        $request->validate([
+            'no_transaksi' => 'required',
+            'sejumlah' => 'required|numeric|min:1',
+            'utk_pembayaran' => 'required',
+            'jenis' => 'required|in:1,2'
+        ]);
+
+        $terbilang = $this->generateTerbilang($request->sejumlah);
+
+        Kwitansi::create([
+            'no_transaksi' => $request->no_transaksi,
+            'terbliang' => $terbilang,
+            'sejumlah' => $request->sejumlah,
+            'utk_pembayaran' => $request->utk_pembayaran,
+            'jenis' => $request->jenis
+        ]);
+
+            return redirect()->route('faktur_penjualan.kelola', $request->no_transaksi)
+                ->with('success', 'Pembayaran berhasil disimpan!');
+        }
+
+        public function destroyKwitansi($id)
+        {
+            $kwitansi = Kwitansi::find($id);
+            
+            if (!$kwitansi) {
+                return redirect()->back()->with('error', 'Kwitansi tidak ditemukan');
+            }
+
+            $no_transaksi = $kwitansi->no_transaksi;
+            $kwitansi->delete();
+
+            return redirect()->route('faktur_penjualan.kelola', $no_transaksi)
+                ->with('success', 'Kwitansi berhasil dihapus');
+        }
+
+    public function cetak($id)
+    {
+        $kwitansi = Kwitansi::findOrFail($id);
+        $faktur = faktur_penjualan::where('no_transaksi', $kwitansi->no_transaksi)->first();
+        
+        return view('kwitansi.cetak', compact('kwitansi', 'faktur'));
+    }
+
+    public function cetakSemua($no_transaksi)
+    {
+        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->first();
+        $kwitansi = Kwitansi::where('no_transaksi', $no_transaksi)->get();
+        
+        return view('kwitansi.cetak-semua', compact('kwitansi', 'faktur'));
+    }
+
+    public function cetakFaktur($no_transaksi)
+    {
+        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        return view('cetak.faktur', compact('faktur'));
+    }
+
+    public function cetakSuratJalan($no_transaksi)
+    {
+        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
+        $totalDibayar = Kwitansi::where('no_transaksi', $no_transaksi)->sum('sejumlah');
+ 
+        if ($totalDibayar < $faktur->total_akhir) {
+            return redirect()->back()->with('error', 'Surat jalan hanya bisa dicetak jika pembayaran LUNAS');
+        }
+        
+        return view('cetak.surat-jalan', compact('faktur'));
+    }
+
+ 
+    private function generateTerbilang($angka)
+    {
+        $angka = (float)$angka;
+        $bilangan = array('', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas');
+        
+        if ($angka < 12) {
+            return $bilangan[$angka];
+        } else if ($angka < 20) {
+            return $bilangan[$angka - 10] . ' Belas';
+        } else if ($angka < 100) {
+            return $bilangan[floor($angka / 10)] . ' Puluh ' . $bilangan[$angka % 10];
+        } else if ($angka < 200) {
+            return 'Seratus ' . $this->generateTerbilang($angka - 100);
+        } else if ($angka < 1000) {
+            return $bilangan[floor($angka / 100)] . ' Ratus ' . $this->generateTerbilang($angka % 100);
+        } else if ($angka < 2000) {
+            return 'Seribu ' . $this->generateTerbilang($angka - 1000);
+        } else if ($angka < 1000000) {
+            return $this->generateTerbilang(floor($angka / 1000)) . ' Ribu ' . $this->generateTerbilang($angka % 1000);
+        } else if ($angka < 1000000000) {
+            return $this->generateTerbilang(floor($angka / 1000000)) . ' Juta ' . $this->generateTerbilang($angka % 1000000);
+        }
+        
+        return 'Jumlah terlalu besar';
+    }
+
+    public function updateStatusSelesai(Request $request, $id)
+{
+    $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
+    
+    if (!$faktur) {
+        return redirect()->back()->with('error', 'Faktur tidak ditemukan');
+    }
+
+    $faktur->update([
+        'status' => 'selesai',
+        'keterangan' => 'Pemesanan telah diselesaikan pada ' . date('Y-m-d H:i:s')
+    ]);
+
+    return redirect()->back()->with('success', 'Status pemesanan berhasil diubah menjadi SELESAI');
 }
-   
 }

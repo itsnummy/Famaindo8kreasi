@@ -47,8 +47,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Kontak WA</label>
-                                <input type="number" class="form-control" name="kontak_wa" placeholder="Nomor Whatsapp">
+                                <label>Kontak WA *</label>
+                                <input type="number" class="form-control" name="kontak_wa" placeholder="Nomor Whatsapp Aktif" required>
                             </div>
                         </div>
                         <div class="col-md-6">

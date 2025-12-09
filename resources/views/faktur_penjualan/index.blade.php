@@ -4,6 +4,7 @@
 @if(session('success'))
 <p class="alert alert-success">{{session('success')}}</p>
 @endif
+
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -56,24 +57,55 @@
                                             <td>{{$no++}}</td>
                                             <td>{{$faktur->pelanggan}}</td>
                                             <td>{{$faktur->item_pesanan}}</td>
-                                            <td>{{$faktur->total_akhir}}</td>
-                                            <td>{{$faktur->status}}</td>
+                                            <td>Rp {{ number_format($faktur->total_akhir, 0, ',', '.') }}</td>
+                                            <td>
+                                                @if($faktur->status == 'selesai')
+                                                    <span class="badge badge-success">Selesai</span>
+                                                @else
+                                                    <span class="badge badge-warning">Progress</span>
+                                                @endif
+                                            </td>
                                          <td>
-                                  <a href="{{ route('faktur_penjualan.kelola', $faktur->no_transaksi) }}"
-                                class="btn btn-sm btn-danger">
-                                    <i class="fas fa-cog"></i> Kelola Pembayaran
-                                </a>
+                                            <div class="btn-group">
+                                                <a href="{{ route('faktur_penjualan.kelola', $faktur->no_transaksi) }}"
+                                                    class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-cog"></i> Kelola
+                                                </a>
 
-                                            <a class="btn btn-sm btn-warning" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}"><i class="fas fa-edit"></i></a>
+                                                @if($faktur->status != 'selesai')
+                                                    <a class="btn btn-sm btn-warning" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-sm btn-secondary" disabled title="Tidak dapat diedit karena sudah selesai">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                @endif
 
-                                            <form action="{{ route('faktur_penjualan.destroy', $faktur->no_transaksi) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-primary" onclick="return confirm('Anda Yakin ingin Menghapus Data?')"><i class="fas fa-trash"></i></button>
-                                            </form>
+                                                <form action="{{ route('faktur_penjualan.destroy', $faktur->no_transaksi) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-primary" onclick="return confirm('Anda Yakin ingin Menghapus Data?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+
+                                                @if($faktur->status != 'selesai')
+                                                    <button class="btn btn-sm btn-success btn-selesai" 
+                                                            data-id="{{ $faktur->no_transaksi }}"
+                                                            data-pelanggan="{{ $faktur->pelanggan }}"
+                                                            title="Tandai Selesai">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                @else
+                                                    <button class="btn btn-sm btn-secondary" disabled title="Sudah Selesai">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </td>
                                         </tr>
-                                            @endforeach
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -84,28 +116,75 @@
                 <!-- /.container-fluid -->
 
             </div>
-            <!-- INCLUDE MODAL KELOLA -->
- @endsection
- @push('scripts')
+
+<!-- Modal Konfirmasi Selesai -->
+<div class="modal fade" id="modalSelesai" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Penyelesaian Pemesanan</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah pemesanan untuk <strong id="modal-pelanggan-selesai"></strong> sudah selesai semua?</p>
+                <p class="text-muted">Pastikan semua proses sudah lengkap sebelum menandai sebagai selesai.</p>
+            </div>
+            <div class="modal-footer">
+                <form id="form-selesai" method="POST" style="display: inline;">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Ya, Tandai Selesai
+                    </button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    $('.btn-kelola').click(function() {
+    // Tombol tandai selesai
+    $('.btn-selesai').click(function() {
         const id = $(this).data('id');
         const pelanggan = $(this).data('pelanggan');
-        const kontak = $(this).data('kontak');
-        const item = $(this).data('item');
-        const total = $(this).data('total');
         
-        console.log('Tombol kelola diklik:', id, pelanggan);
+        // Set data di modal
+        $('#modal-pelanggan-selesai').text(pelanggan);
         
-        // Set data ke modal
-        $('#modal-pelanggan').text(pelanggan);
-        $('#display-pelanggan').text(pelanggan);
-        $('#display-id').text(id);
+        // Set action form
+        $('#form-selesai').attr('action', '/faktur_penjualan/' + id + '/selesai');
         
         // Tampilkan modal
-        $('#modalKelola').modal('show');
+        $('#modalSelesai').modal('show');
     });
+
+    // SweetAlert untuk sukses
+    @if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        timer: 3000,
+        showConfirmButton: false
+    });
+    @endif
+
+    // SweetAlert untuk error
+    @if(session('error'))
+    Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: '{{ session('error') }}',
+        timer: 3000,
+        showConfirmButton: false
+    });
+    @endif
 });
 </script>
 @endpush
