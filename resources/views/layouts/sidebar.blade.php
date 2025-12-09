@@ -1,4 +1,4 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion sticky-sidebar" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
@@ -24,7 +24,7 @@
 
     <!-- Heading: Menu Kelola -->
     <div class="sidebar-heading">
-        Menu Kelola
+        Menu Transaksi
     </div>
 
     <!-- Kelola Pemesanan -->
@@ -35,6 +35,15 @@
         </a>
     </li>
 
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading: Akun -->
+    <div class="sidebar-heading">
+       Menu Akun
+    </div>
+
     <!-- Kelola Akun -->
     <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('users.index') }}">
@@ -42,37 +51,6 @@
             <span>Kelola Akun</span>
         </a>
     </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading: Akun -->
-    <div class="sidebar-heading">
-        Akun
-    </div>
-
-    <!-- Info User -->
-    <li class="nav-item">
-        <div class="nav-link">
-            <i class="fas fa-user-circle"></i>
-            <span>
-                {{ auth()->user()->name ?? 'Admin' }}
-                <small class="d-block text-light">
-                    {{ auth()->user()->email ?? '-' }}
-                </small>
-            </span>
-        </div>
-    </li>
-
-    <!-- Edit Profile (jika ada) -->
-    @if(Route::has('profile.edit'))
-    <li class="nav-item {{ request()->is('profile') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('profile.edit') }}">
-            <i class="fas fa-user-edit"></i>
-            <span>Edit Profile</span>
-        </a>
-    </li>
-    @endif
 
     <!-- Logout -->
     <li class="nav-item">

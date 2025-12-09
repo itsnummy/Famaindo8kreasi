@@ -56,11 +56,10 @@ class faktur_penjualanController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect('faktur_penjualan')->with('success', 'Pemesanan berhasil ditambahkan');
+        return redirect('faktur_penjualan')->with('success', 'Data Pemesanan berhasil ditambahkan');
     }
         public function edit(faktur_penjualan $faktur_penjualan)
         {
-            // Sekarang $faktur_penjualan adalah object model, bukan string ID
             return view('faktur_penjualan.edit')->with('data', $faktur_penjualan);
         }
 
@@ -97,7 +96,7 @@ class faktur_penjualanController extends Controller
             'terbilang' => $request->terbilang,
             'kembali' => $request->kembali,
             'keterangan' => $request->keterangan,]);
-return redirect('faktur_penjualan')->with('success', 'Pemesanan berhasil diupdate');
+return redirect('faktur_penjualan')->with('success', 'Data Pemesanan berhasil diperbarui');
 }
 
 public function destroy(faktur_penjualan $faktur_penjualan)
@@ -106,22 +105,22 @@ public function destroy(faktur_penjualan $faktur_penjualan)
     return redirect('faktur_penjualan')->with('success','Data Berhasil Dihapus');
 }
 
- public function kelola($id)
-    {
-        // Ambil data faktur berdasarkan no_transaksi
-        $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
-        
-        if (!$faktur) {
-            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        public function kelola($id) 
+        {
+            // Cari faktur berdasarkan no_transaksi
+            $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
+            
+            if (!$faktur) {
+                abort(404, 'Data faktur tidak ditemukan');
+            }
+
+            $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
+            $totalDibayar = $kwitansi->sum('sejumlah');
+            $sisa = $faktur->total_akhir - $totalDibayar;
+
+            return view('faktur_penjualan.kelola.index-kelola', 
+                compact('faktur', 'kwitansi', 'totalDibayar', 'sisa'));
         }
-
-        // Data kwitansi
-        $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
-        $totalDibayar = $kwitansi->sum('sejumlah');
-        $sisa = $faktur->total_akhir - $totalDibayar;
-
-        return view('faktur_penjualan.kelola.index-kelola', compact('faktur', 'kwitansi', 'totalDibayar', 'sisa'));
-    }
 
     public function storeKwitansi(Request $request)
 {

@@ -195,7 +195,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update Data</button>
-                    <a href="{{ route('faktur_penjualan.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('faktur_penjualan.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
                 </div>
             </div>
         </div>

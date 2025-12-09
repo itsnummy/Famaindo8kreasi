@@ -158,3 +158,21 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgba(255,255,255,0.15);
     border-left: 4px solid #fff;
 }
+
+/* Sidebar Sticky */
+.sticky-sidebar {
+    position: sticky !important;
+    top: 0 !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+}
+
+/* Optional: Smooth scroll */
+.sticky-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sticky-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}

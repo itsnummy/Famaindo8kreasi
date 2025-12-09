@@ -60,10 +60,10 @@
                                             <td>{{$faktur->status}}</td>
                                          <td>
                                             {{-- TOMBOL KELOLA --}}
-                                           <a href="/faktur_penjualan/kelola/{{ $faktur->no_transaksi }}"
-                                            class="btn btn-sm btn-danger">
-                                                <i class="fas fa-cog"></i> Kelola
-                                            </a>
+                                  <a href="{{ route('faktur_penjualan.kelola', $faktur->no_transaksi) }}"
+                                class="btn btn-sm btn-danger">
+                                    <i class="fas fa-cog"></i> Kelola Pembayaran
+                                </a>
 
                                             <a class="btn btn-sm btn-warning" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}"><i class="fas fa-edit"></i></a>
 
