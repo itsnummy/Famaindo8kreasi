@@ -59,7 +59,6 @@
                                             <td>{{$faktur->total_akhir}}</td>
                                             <td>{{$faktur->status}}</td>
                                          <td>
-                                            {{-- TOMBOL KELOLA --}}
                                   <a href="{{ route('faktur_penjualan.kelola', $faktur->no_transaksi) }}"
                                 class="btn btn-sm btn-danger">
                                     <i class="fas fa-cog"></i> Kelola Pembayaran
