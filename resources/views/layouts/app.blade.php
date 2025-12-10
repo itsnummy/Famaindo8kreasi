@@ -153,11 +153,11 @@
         <script src="{{asset('vendor/chart.js/Chart.min.js')}}"></script>
         <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+        <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
 
         <!-- Page level custom scripts (hanya untuk user yang login) -->
         <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
         <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
-        <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
     @endif
 
     @stack('scripts')

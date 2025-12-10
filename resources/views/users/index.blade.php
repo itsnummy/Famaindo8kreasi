@@ -37,8 +37,8 @@
                         <div class="card-body">
                             <a class="btn btn-primary mb-3" href="{{route('users.create')}}"><i class="fas fa-plus"></i> Tambah Akun</a>
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
+                                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>ID</th>
                                             <th>Username</th>

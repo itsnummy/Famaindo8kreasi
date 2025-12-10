@@ -35,6 +35,21 @@
         </a>
     </li>
 
+      <li class="nav-item {{ request()->is('kelola-pembayaran*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('faktur_penjualan.kelolabayar') }}">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Kelola Pembayaran</span>
+            @php
+                $countUnfinished = \App\Models\faktur_penjualan::where('status', '!=', 'selesai')
+                    ->orWhereNull('status')
+                    ->count();
+            @endphp
+            @if($countUnfinished > 0)
+                <span class="badge badge-danger badge-counter">{{ $countUnfinished }}</span>
+            @endif
+        </a>
+    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">

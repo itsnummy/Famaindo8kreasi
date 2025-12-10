@@ -110,22 +110,39 @@ class faktur_penjualanController extends Controller
         return redirect('faktur_penjualan')->with('success','Data Berhasil Dihapus');
     }
 
-    public function kelola($id) 
-    {
-        // Cari faktur berdasarkan no_transaksi
-        $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
-        
-        if (!$faktur) {
-            abort(404, 'Data faktur tidak ditemukan');
-        }
+ public function indexKelolaPembayaran()
+{
+    // Ambil semua faktur yang belum selesai
+    $faktur_penjualan = faktur_penjualan::where(function($query) {
+        $query->where('status', '!=', 'selesai')
+              ->orWhereNull('status');
+    })->orderBy('tanggal', 'desc')->get();
+    
+    // Tampilkan view LIST (kelolabayar.blade.php)
+    return view('faktur_penjualan.kelolabayar', [
+        'faktur_penjualan' => $faktur_penjualan,
+        'is_list_page' => true // Tetap butuh flag ini
+    ]);
+}
 
-        $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
-        $totalDibayar = $kwitansi->sum('sejumlah');
-        $sisa = $faktur->total_akhir - $totalDibayar;
-
-        return view('faktur_penjualan.kelola.index-kelola', 
-            compact('faktur', 'kwitansi', 'totalDibayar', 'sisa'));
+public function kelola($id) 
+{
+    // Cari faktur berdasarkan no_transaksi
+    $faktur = faktur_penjualan::where('no_transaksi', $id)->first();
+    
+    if (!$faktur) {
+        abort(404, 'Data faktur tidak ditemukan');
     }
+    
+    $kwitansi = Kwitansi::where('no_transaksi', $id)->get();
+    $totalDibayar = $kwitansi->sum('sejumlah');
+    $sisa = $faktur->total_akhir - $totalDibayar;
+
+    // Tampilkan view DETAIL dengan tabs (index-kelola.blade.php)
+    return view('faktur_penjualan.kelola.index-kelola', 
+        compact('faktur', 'kwitansi', 'totalDibayar', 'sisa')
+    );
+}
 
     public function storeKwitansi(Request $request)
     {
@@ -242,4 +259,5 @@ class faktur_penjualanController extends Controller
 
     return redirect()->back()->with('success', 'Status pemesanan berhasil diubah menjadi SELESAI');
 }
+
 }

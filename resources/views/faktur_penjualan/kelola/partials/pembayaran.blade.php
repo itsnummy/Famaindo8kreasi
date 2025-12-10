@@ -77,15 +77,6 @@
         <div class="card">
             <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Riwayat Pembayaran (Kwitansi)</h6>
-                @if($kwitansi->count() > 0)
-                <div>
-                    <a href="{{ route('kwitansi.cetak-semua', $faktur->no_transaksi) }}" 
-                       target="_blank" 
-                       class="btn btn-sm btn-light">
-                        <i class="fas fa-print"></i> Cetak Semua Kwitansi
-                    </a>
-                </div>
-                @endif
             </div>
             <div class="card-body">
                 <div class="table-responsive">

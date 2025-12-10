@@ -20,16 +20,25 @@ Route::middleware(['auth'])->group(function () {
     
     // Dashboard dengan controller
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/filter', [DashboardController::class, 'filterData'])->name('dashboard.filter');
     
     // User Management
     Route::resource('users', UserController::class);
     
     // Faktur Penjualan
-    Route::resource('faktur_penjualan', faktur_penjualanController::class);
+    Route::resource('faktur_penjualan', faktur_penjualanController::class)
+    ->except(['show']); 
     Route::get('/faktur_penjualan/kelola/{id}', [faktur_penjualanController::class, 'kelola'])
         ->name('faktur_penjualan.kelola');
     Route::put('/faktur_penjualan/{id}/selesai', [faktur_penjualanController::class, 'updateStatusSelesai'])
         ->name('faktur_penjualan.selesai');
+    
+        Route::get('/kelola-pembayaran', [faktur_penjualanController::class, 'indexKelolaPembayaran'])
+    ->name('faktur_penjualan.kelolabayar');
+
+// Route untuk DETAIL satu faktur (tabs)
+    Route::get('/faktur_penjualan/kelola/{id}', [faktur_penjualanController::class, 'kelola'])
+    ->name('faktur_penjualan.kelola'); 
     
     // Kwitansi
     Route::prefix('kwitansi')->group(function () {

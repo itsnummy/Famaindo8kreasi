@@ -38,8 +38,8 @@
                         <div class="card-body">
                             <a class="btn btn-primary mb-3" href="{{route('faktur_penjualan.create')}}"><i class="fas fa-plus"></i> Tambah Pemesanan</a>
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
+                                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                    <thead  class="thead-light">
                                         <tr>
                                             <th>No</th>
                                             <th>Pelanggan</th>
@@ -67,10 +67,6 @@
                                             </td>
                                          <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('faktur_penjualan.kelola', $faktur->no_transaksi) }}"
-                                                    class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-cog"></i> Kelola
-                                                </a>
 
                                                 @if($faktur->status != 'selesai')
                                                     <a class="btn btn-sm btn-warning" href="{{ route('faktur_penjualan.edit', $faktur->no_transaksi) }}">
@@ -113,11 +109,10 @@
                     </div>
 
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
 
-<!-- Modal Konfirmasi Selesai -->
+
 <div class="modal fade" id="modalSelesai" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -149,6 +144,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+    
     // Tombol tandai selesai
     $('.btn-selesai').click(function() {
         const id = $(this).data('id');

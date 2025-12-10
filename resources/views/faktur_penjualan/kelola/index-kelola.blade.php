@@ -45,8 +45,8 @@
 </div>
 
 <div class="mt-3 text-right">
-    <a href="{{ route('faktur_penjualan.index') }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Kembali ke Data Pemesanan
+    <a href="{{ route('faktur_penjualan.kelolabayar') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Kembali
     </a>
 </div>
 
