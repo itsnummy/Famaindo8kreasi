@@ -13,7 +13,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" id="pembayaran-tab" data-toggle="tab" href="#pembayaran" role="tab">
-                Kelola Pembayaran
+                Pembayaran
             </a>
         </li>
         <li class="nav-item">

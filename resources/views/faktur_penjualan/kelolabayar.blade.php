@@ -54,7 +54,7 @@
                                       
                                         <a href="{{ route('faktur_penjualan.kelola', $item->no_transaksi) }}"
                                            class="btn btn-primary btn-sm">
-                                            <i class="fas fa-cog"></i> Kelola Pembayaran
+                                            <i class="fas fa-cog"></i> Kelola
                                         </a>
                                     </td>
                                 </tr>
