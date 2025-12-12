@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <!-- Form Tambah Kwitansi -->
         <div class="card">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-accent text-white">
                 <h6 class="mb-0">Tambah Pembayaran</h6>
             </div>
             <div class="card-body">
@@ -56,7 +56,7 @@
 
         <!-- Status Ringkasan -->
         <div class="card mt-3">
-            <div class="card-header bg-warning text-white">
+            <div class="card-header bg-accent text-white">
                 <h6 class="mb-0">Status Pembayaran</h6>
             </div>
             <div class="card-body">
@@ -75,7 +75,7 @@
     <div class="col-md-8">
         <!-- Tabel Riwayat Kwitansi -->
         <div class="card">
-            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <div class="card-header bg-accent text-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Riwayat Pembayaran (Kwitansi)</h6>
             </div>
             <div class="card-body">

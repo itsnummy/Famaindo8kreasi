@@ -52,8 +52,8 @@
                         <!-- Page Heading (opsional, bisa di-view masing-masing) -->
                         @if(!isset($hidePageHeading) || !$hidePageHeading)
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">
-                                @yield('title', 'Selamat Datang!')
+                            <h1 class="h6 text-gray-600">
+                                Monitoring Pemesanan & Pembayaran — Famaindo Delapan Kreasi 
                             </h1>
                             @hasSection('action_button')
                                 @yield('action_button')

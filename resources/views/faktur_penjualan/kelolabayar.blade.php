@@ -32,7 +32,7 @@
                                     <th width="5%">No</th>
                                     <th width="15%">No Transaksi</th>
                                     <th width="15%">Jatuh Tempo</th>
-                                    <th width="20%">Pesanan</th>
+                                    <th width="20%">Item</th>
                                     <th width="15%">Total</th>
                                     <th width="20%">Aksi</th>
                                 </tr>
