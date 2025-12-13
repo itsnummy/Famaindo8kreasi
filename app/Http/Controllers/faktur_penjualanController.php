@@ -184,40 +184,6 @@ public function kelola($id)
                 ->with('success', 'Kwitansi berhasil dihapus');
         }
 
-    public function cetak($id)
-    {
-        $kwitansi = Kwitansi::findOrFail($id);
-        $faktur = faktur_penjualan::where('no_transaksi', $kwitansi->no_transaksi)->first();
-        
-        return view('kwitansi.cetak', compact('kwitansi', 'faktur'));
-    }
-
-    public function cetakSemua($no_transaksi)
-    {
-        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->first();
-        $kwitansi = Kwitansi::where('no_transaksi', $no_transaksi)->get();
-        
-        return view('kwitansi.cetak-semua', compact('kwitansi', 'faktur'));
-    }
-
-    public function cetakFaktur($no_transaksi)
-    {
-        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
-        
-        return view('cetak.faktur', compact('faktur'));
-    }
-
-    public function cetakSuratJalan($no_transaksi)
-    {
-        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
-        $totalDibayar = Kwitansi::where('no_transaksi', $no_transaksi)->sum('sejumlah');
- 
-        if ($totalDibayar < $faktur->total_akhir) {
-            return redirect()->back()->with('error', 'Surat jalan hanya bisa dicetak jika pembayaran LUNAS');
-        }
-        
-        return view('cetak.surat-jalan', compact('faktur'));
-    }
 
  
     private function generateTerbilang($angka)

@@ -11,7 +11,7 @@
     <!-- Cetak Surat Jalan -->
     <div class="col-md-4 mb-3">
         @if($totalDibayar >= $faktur->total_akhir)
-            <a href="{{ route('cetak.surat-jalan', $faktur->no_transaksi) }}" 
+            <a href="{{ route('preview.suratjalan', $faktur->no_transaksi) }}" 
                target="_blank" 
                class="btn btn-success btn-block">
                 <i class="fas fa-truck"></i> Cetak Surat Jalan
@@ -29,7 +29,7 @@
     
     <div class="col-md-4 mb-3">
         @if($kwitansi->count() > 0)
-        <a href="{{ route('kwitansi.cetak-semua', $faktur->no_transaksi) }}"
+        <a href="{{ route('preview.semuakwitansi', $faktur->no_transaksi) }}"
            target="_blank"
            class="btn btn-info btn-block">
             <i class="fas fa-print"></i> Cetak Semua Kwitansi

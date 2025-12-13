@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\faktur_penjualan;
+use App\Models\Kwitansi;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -49,24 +50,6 @@ class CetakController extends Controller
                   ->setOption('isRemoteEnabled', true);
         
         return $pdf->download('Faktur-' . $no_transaksi . '.pdf');
-    }
-    
-    // Cetak Kwitansi (nanti bisa ditambahkan)
-    public function cetakKwitansi($no_transaksi)
-    {
-        // Akan diisi nanti
-    }
-    
-    // Cetak Surat Jalan (nanti bisa ditambahkan)
-    public function cetakSuratJalan($no_transaksi)
-    {
-        // Akan diisi nanti
-    }
-    
-    // Cetak Invoice (nanti bisa ditambahkan)
-    public function cetakInvoice($no_transaksi)
-    {
-        // Akan diisi nanti
     }
     
     // Fungsi format tanggal
@@ -132,4 +115,127 @@ class CetakController extends Controller
     {
         return number_format($angka, 0, ',', '.');
     }
-} // ← PASTIKAN ADA KURUNG KURAWAL PENUTUP INI!
+
+    // Preview Surat Jalan
+    public function previewSuratJalan($no_transaksi)
+    {
+        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        $data = [
+            'faktur' => $faktur,
+            'tanggal_formatted' => $this->formatTanggal($faktur->tanggal, 'short') . ' ' . date('H.i.s', strtotime($faktur->tanggal)),
+            'tanggal_cetak' => date('d/m/Y H:i'),
+            'is_preview' => true,
+        ];
+        
+        return view('faktur_penjualan.cetak.suratjalan', $data);
+    }
+
+    // Cetak/Download PDF Surat Jalan
+    public function cetakSuratJalan($no_transaksi)
+    {
+        $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        $data = [
+            'faktur' => $faktur,
+            'tanggal_formatted' => $this->formatTanggal($faktur->tanggal, 'short') . ' ' . date('H.i.s', strtotime($faktur->tanggal)),
+            'tanggal_cetak' => date('d/m/Y H:i'),
+            'is_preview' => false,
+        ];
+        
+        $pdf = PDF::loadView('faktur_penjualan.cetak.surat_jalan', $data)
+                ->setPaper('a5', 'landscape') 
+                ->setOption('defaultFont', 'Arial');
+        
+        return $pdf->download('suratjalan-' . $no_transaksi . '.pdf');
+    }
+
+    public function previewKwitansi($id)
+    {
+       
+        $kwitansi = Kwitansi::with('faktur')->findOrFail($id);
+        $faktur = $kwitansi->faktur;
+        
+        $data = [
+            'faktur' => $faktur,
+            'kwitansi' => $kwitansi,
+            'terbilang' => $faktur->terbilang ?? $this->terbilang($kwitansi->sejumlah),
+            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $faktur->tanggal, 'long'),
+            'is_preview' => true,
+        ];
+        
+        return view('faktur_penjualan.cetak.kwitansi', $data);
+    }
+
+   
+    public function cetakKwitansi($id)
+    {
+        // Ambil data kwitansi berdasarkan ID
+        $kwitansi = Kwitansi::with('faktur')->findOrFail($id);
+        $faktur = $kwitansi->faktur;
+        
+        $data = [
+            'faktur' => $faktur,
+            'kwitansi' => $kwitansi,
+            'terbilang' => $faktur->terbilang ?? $this->terbilang($kwitansi->sejumlah),
+            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $faktur->tanggal, 'long'),
+            'is_preview' => false,
+        ];
+        
+        $pdf = PDF::loadView('faktur_penjualan.cetak.kwitansi', $data)
+                ->setPaper('a5', 'portrait')
+                ->setOption('defaultFont', 'Arial');
+        
+        return $pdf->download('Kwitansi-' . $kwitansi->id . '.pdf');
+    }
+
+    public function listKwitansi($no_transaksi)
+    {
+        $faktur = faktur_penjualan::with('kwitansi')->where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        return view('faktur_penjualan.kwitansi.index', [
+            'faktur' => $faktur,
+            'kwitansiList' => $faktur->kwitansi,
+        ]);
+    }
+
+    public function previewSemuaKwitansi($no_transaksi)
+    {
+        $faktur = faktur_penjualan::with('kwitansi')->where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        if ($faktur->kwitansi->isEmpty()) {
+            return back()->with('error', 'Tidak ada kwitansi untuk ditampilkan.');
+        }
+        
+        $data = [
+            'faktur' => $faktur,
+            'kwitansiList' => $faktur->kwitansi,
+            'is_preview' => true,
+        ];
+        
+        return view('faktur_penjualan.cetak.semuakwitansi', $data);
+    }
+
+    // DOWNLOAD PDF Semua Kwitansi
+    public function cetakSemuaKwitansi($no_transaksi)
+    {
+        $faktur = faktur_penjualan::with('kwitansi')->where('no_transaksi', $no_transaksi)->firstOrFail();
+        
+        if ($faktur->kwitansi->isEmpty()) {
+            return back()->with('error', 'Tidak ada kwitansi untuk dicetak.');
+        }
+        
+        $data = [
+            'faktur' => $faktur,
+            'kwitansiList' => $faktur->kwitansi,
+            'is_preview' => false,
+        ];
+        
+        $pdf = PDF::loadView('faktur_penjualan.cetak.semuakwitansi', $data)
+                ->setPaper('a5', 'portrait')
+                ->setOption('defaultFont', 'Arial');
+        
+        return $pdf->download('SemuaKwitansi-' . $no_transaksi . '.pdf');
+    }
+        
+} 

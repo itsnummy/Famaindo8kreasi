@@ -103,7 +103,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{ route('kwitansi.cetak', $item->id) }}" 
+                                        <a href="{{ route('preview.kwitansi', $item->id) }}" 
                                            target="_blank" 
                                            class="btn btn-sm btn-primary" 
                                            title="Cetak Kwitansi">

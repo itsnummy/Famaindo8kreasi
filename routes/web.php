@@ -45,15 +45,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('kwitansi')->group(function () {
         Route::post('/', [faktur_penjualanController::class, 'storeKwitansi'])->name('kwitansi.store');
         Route::delete('/{id}', [faktur_penjualanController::class, 'destroyKwitansi'])->name('kwitansi.destroy');
-        Route::get('/cetak/{id}', [faktur_penjualanController::class, 'cetak'])->name('kwitansi.cetak');
-        Route::get('/cetak-semua/{no_transaksi}', [faktur_penjualanController::class, 'cetakSemua'])->name('kwitansi.cetak-semua');
     });
     
     // Cetak
     Route::prefix('cetak')->group(function () {
         Route::get('/faktur/{no_transaksi}', [CetakController::class, 'cetakFaktur'])->name('cetak.faktur');
         Route::get('/preview/faktur/{no_transaksi}', [CetakController::class, 'previewFaktur'])->name('preview.faktur');
-        Route::get('/surat-jalan/{no_transaksi}', [faktur_penjualanController::class, 'cetakSuratJalan'])->name('cetak.surat-jalan');
+        Route::get('/preview/suratjalan/{no_transaksi}', [CetakController::class, 'previewSuratJalan'])->name('preview.suratjalan');
+        Route::get('/suratjalan/{no_transaksi}', [CetakController::class, 'cetakSuratJalan'])->name('cetak.suratjalan');
+        Route::get('/preview/kwitansi/{no_transaksi}', [CetakController::class, 'previewKwitansi'])->name('preview.kwitansi');
+        Route::get('/kwitansi/{no_transaksi}', [CetakController::class, 'cetakKwitansi'])->name('cetak.kwitansi');
+        Route::get('/preview/semuakwitansu/{no_transaksi}', [CetakController::class, 'previewSemuaKwitansi'])->name('preview.semuakwitansi');
+        Route::get('/semuakwitansi/{no_transaksi}', [CetakController::class, 'cetakSemuaKwitansi'])->name('cetak.semuakwitansi');
     });
 });
 

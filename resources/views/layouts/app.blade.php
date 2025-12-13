@@ -24,6 +24,7 @@
     @stack('styles')
 </head>
 
+
 <body id="page-top">
     
     @if(Request::is('login'))

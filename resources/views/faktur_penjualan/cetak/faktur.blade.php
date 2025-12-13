@@ -9,12 +9,12 @@
         /* Pengaturan Kertas A5 Landscape */
         @page {
             size: A5 landscape;
-            margin: 5mm 10mm 5mm 10mm; /* Atas Kanan Bawah Kiri */
+            margin: 5mm 10mm 5mm 10mm;
         }
         
         body {
             font-family: 'Arial', sans-serif;
-            font-size: 10px; /* Ukuran font standar agar muat */
+            font-size: 10px;
             line-height: 1.2;
             color: #000;
             margin: 0;
@@ -27,6 +27,11 @@
         .text-bold { font-weight: bold; }
         .uppercase { text-transform: uppercase; }
         
+        /* Warna Border Abu-Abu Tipis */
+        .border-thin-gray {
+            border: 1px solid #ccc;
+        }
+
         /* Container Utama */
         .invoice-container {
             width: 100%;
@@ -37,7 +42,6 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
-            border-bottom: 2px solid #000;
             padding-bottom: 5px;
         }
 
@@ -48,13 +52,10 @@
             gap: 15px;
         }
 
-        /* AREA LOGO - Ganti src nanti */
         .logo-img {
-            width: 80px; /* Lebar Logo */
-            height: 80px; /* Tinggi Logo */
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            /* Border merah hanya untuk bantuan visual saat dev, hapus nanti */
-            /* border: 1px dashed red; */ 
         }
 
         .company-details {
@@ -83,20 +84,56 @@
         .label-col { width: 70px; }
         .sep-col { width: 10px; text-align: center; }
 
-        /* TABEL ITEM */
         .item-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 5px;
             font-size: 9px;
+            border: none;
         }
         .item-table th, .item-table td {
-            border: 1px solid #000;
+            border: none; 
             padding: 4px;
         }
+        
+        /* Terapkan garis HANYA pada Header: Atas dan Bawah */
+        .item-table thead tr {
+            border-top: 1px solid #ccc; /* Abu-abu tipis */
+            border-bottom: 1px solid #ccc; /* Abu-abu tipis */
+        }
         .item-table th {
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; 
+            text-align: left;
+        }
+        
+        /* Penyesuaian khusus untuk header yang perlu di tengah/kanan */
+        .item-table th:first-child, 
+        .item-table th:nth-child(4) { 
             text-align: center;
+        }
+        .item-table th:nth-child(5), 
+        .item-table th:nth-child(6), 
+        .item-table th:last-child { 
+            text-align: right;
+        }
+
+        /* Penyesuaian untuk isi tabel agar tidak terlalu mepet kiri */
+        .item-table tbody td {
+            padding: 4px;
+        }
+        .item-table tbody td:first-child, 
+        .item-table tbody td:nth-child(4) { 
+            text-align: center;
+        }
+        .item-table tbody td:nth-child(2), 
+        .item-table tbody td:nth-child(3) { 
+            padding-left: 8px;
+        }
+
+        /* Garis Pemisah Tambahan (HR) */
+        .divider {
+            border: 0;
+            border-top: 1px solid #ccc; /* Abu-abu tipis */
+            margin: 5px 0;
         }
 
         /* FOOTER SECTION */
@@ -115,14 +152,13 @@
             width: 37%;
         }
 
-        /* Layout Grid untuk Ringkasan */
-        .summary-grid {
-            display: flex;
-            margin-bottom: 5px;
+        /* Teks Data Ringkasan di footer-right tidak bold */
+        .footer-right .info-table td {
+            font-weight: normal; 
         }
-        .summary-col-label { width: 80px; font-weight: bold; }
-        .summary-col-sep { width: 10px; }
-        .summary-col-val { flex: 1; text-align: right; font-weight: bold;}
+        .footer-right .info-table td.text-bold {
+            font-weight: bold; /* Hanya label yang bold */
+        }
 
         /* Terbilang */
         .terbilang-box {
@@ -154,7 +190,24 @@
             border: 1px solid #000;
             padding: 3px;
             font-size: 9px;
-            width: 60%; /* Sesuai gambar, tidak full */
+            width: 60%; 
+        }
+        
+        /* Tambahan bold pada teks Rekening Bank dan label */
+        .payment-note strong {
+            font-weight: bold;
+            font-size: 10px; /* Sedikit lebih besar dari teks di dalamnya */
+        }
+        .payment-note .rek-bank {
+             font-weight: bold;
+        }
+
+        /* Catatan DP di luar box */
+        .dp-note {
+            font-style: italic;
+            font-size: 8px; /* Lebih kecil */
+            margin-top: 2px;
+            width: 60%;
         }
 
         /* Hapus tombol saat print */
@@ -163,7 +216,8 @@
         }
     </style>
 </head>
-<body onload="window.print()"> <div class="invoice-container">
+<body onload="window.print()"> 
+    <div class="invoice-container">
         
         <div class="header">
             <div class="header-left">
@@ -180,7 +234,7 @@
             <div class="header-right">
                 <table class="info-table">
                     <tr>
-                      <td class="label-col">No Transaksi</td>
+                        <td class="label-col">No Transaksi</td>
                         <td class="sep-col">:</td>
                         <td>{{ str_replace('-', '/', $faktur->no_transaksi) }}</td>
                         <td width="30">Dept.</td>
@@ -228,15 +282,19 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-center">1</td>
-                    <td>{{ $faktur->kode_item }}</td> <td>{{ $faktur->item_pesanan }}</td>
-                    <td class="text-center">{{ number_format($faktur->jml, 0, ',', '.') }} PCS</td>
+                    <td>1</td>
+                    <td>{{ $faktur->kode_item }}</td> 
+                    <td>{{ $faktur->item_pesanan }}</td>
+                    <td>{{ number_format($faktur->jml, 0, ',', '.') }} PCS</td>
                     <td class="text-right">{{ number_format($faktur->harga_satuan, 0, ',', '.') }}</td>
                     <td class="text-right">{{ $faktur->potongan ?? '0' }}</td>
                     <td class="text-right">{{ number_format($faktur->subtotal, 0, ',', '.') }}</td>
                 </tr>
+                 <tr><td colspan="7" style="height: 70px;"></td></tr>
             </tbody>
         </table>
+
+        <hr class="divider">
 
         <div class="footer">
             
@@ -254,27 +312,27 @@
                                     <tr>
                                         <td class="text-bold" width="70">Jml Item</td>
                                         <td width="10">:</td>
-                                        <td class="text-right text-bold" width="50">{{ number_format($faktur->jml, 0) }}</td>
+                                        <td class="text-right">{{ number_format($faktur->jml, 0) }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-bold">Potongan</td>
                                         <td>:</td>
-                                        <td class="text-right text-bold">{{ $faktur->potongan ?? '0' }}%</td>
+                                        <td class="text-right">{{ $faktur->potongan ?? '0' }}%</td>
                                     </tr>
                                     <tr>
                                         <td class="text-bold">Pajak</td>
                                         <td>:</td>
-                                        <td class="text-right text-bold">{{ number_format($faktur->pajak ?? 0, 0) }}%</td>
+                                        <td class="text-right">{{ number_format($faktur->pajak ?? 0, 0) }}%</td>
                                     </tr>
                                     <tr>
                                         <td class="text-bold">Biaya Lain</td>
                                         <td>:</td>
-                                        <td class="text-right text-bold">{{ number_format((int)$faktur->biaya_lain, 0, ',', '.') }}</td>
+                                        <td class="text-right">{{ number_format((int)$faktur->biaya_lain, 0, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-bold">Tanggal Jt</td>
                                         <td>:</td>
-                                        <td class="text-right text-bold">
+                                        <td class="text-right">
                                             {{ $faktur->tgl_jt ? date('d/m/Y', strtotime($faktur->tgl_jt)) : '-' }}
                                         </td>
                                     </tr>
@@ -307,8 +365,10 @@
                 
                 <div class="payment-note">
                     <strong>Untuk Pembayaran :</strong><br>
-                    Bank BCA 1280152991 an Ega Septia Manwel<br>
-                    <i>Untuk Dp min.50% dan pelunasan sebelum dikirim</i>
+                    <span class="rek-bank">Bank BCA 1280152991 an Ega Septia Manwel</span>
+                </div>
+                <div class="dp-note">
+                    Untuk Dp min.50% dan pelunasan sebelum dikirim
                 </div>
             </div>
 
@@ -317,42 +377,42 @@
                     <tr>
                         <td class="text-bold" width="80">Sub Total</td>
                         <td width="10">:</td>
-                        <td class="text-right text-bold">{{ number_format($faktur->subtotal, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($faktur->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">Total Akhir</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format($faktur->total_akhir, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($faktur->total_akhir, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">DP PO</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format($faktur->DP_PO, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($faktur->DP_PO, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">Tunai</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format((int)$faktur->tunai, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format((int)$faktur->tunai, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">Kredit</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format((int)$faktur->kredit, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format((int)$faktur->kredit, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">K. Debit</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format((int)$faktur->K_Debit, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format((int)$faktur->K_Debit, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold">K. Kredit</td>
                         <td>:</td>
-                        <td class="text-right text-bold">{{ number_format((int)$faktur->K_Kredit, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format((int)$faktur->K_Kredit, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="text-bold" style="border-top: 1px solid #000; padding-top: 2px;">Kembali</td>
                         <td style="border-top: 1px solid #000; padding-top: 2px;">:</td>
-                        <td class="text-right text-bold" style="border-top: 1px solid #000; padding-top: 2px;">{{ number_format((int)$faktur->kembali, 0, ',', '.') }}</td>
+                        <td class="text-right" style="border-top: 1px solid #000; padding-top: 2px;">{{ number_format((int)$faktur->kembali, 0, ',', '.') }}</td>
                     </tr>
                 </table>
                 

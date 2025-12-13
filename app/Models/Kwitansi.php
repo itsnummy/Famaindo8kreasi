@@ -16,4 +16,9 @@ class Kwitansi extends Model
         'utk_pembayaran', 
         'jenis'
     ];
+
+    public function faktur()
+    {
+        return $this->belongsTo(faktur_penjualan::class, 'no_transaksi', 'no_transaksi');
+    }
 }
