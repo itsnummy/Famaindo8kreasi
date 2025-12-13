@@ -12,7 +12,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Proses login (email ATAU username)
+   
     public function login(Request $request)
     {
         $request->validate([
@@ -20,7 +20,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        // Cek apakah input email atau username
+        
         $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         
         $credentials = [
