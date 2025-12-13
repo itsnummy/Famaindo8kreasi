@@ -43,7 +43,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Pelanggan</th>
-                                            <th>Item Pesanan</th>
+                                            <th>Item</th>
                                             <th>Total</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
@@ -56,7 +56,7 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{$faktur->pelanggan}}</td>
-                                            <td>{{$faktur->item_pesanan}}</td>
+                                            <td>{{$faktur->kode_item}}</td>
                                             <td>Rp {{ number_format($faktur->total_akhir, 0, ',', '.') }}</td>
                                             <td>
                                                 @if($faktur->status == 'selesai')

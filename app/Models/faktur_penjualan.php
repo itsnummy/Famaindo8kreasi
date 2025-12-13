@@ -17,7 +17,7 @@ class faktur_penjualan extends Model
     
     protected $fillable = [
         'no_transaksi', 'kode_sales', 'pelanggan', 'alamat', 'kontak_wa',
-        'email', 'item_pesanan', 'harga_satuan', 'total_item', 'kredit',
+        'email', 'kode_item','item_pesanan', 'harga_satuan', 'total_item', 'kredit',
         'total_akhir', 'potongan', 'biaya_lain', 'status', 'kembali',
         'tunai', 'tanggal', 'id_user', 'tgl_jt', 'subtotal', 'keterangan',
         'K_Debit', 'DP_PO', 'jml', 'K_Kredit', 'pajak', 'terbilang'

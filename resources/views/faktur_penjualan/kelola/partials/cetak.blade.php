@@ -1,9 +1,9 @@
 <div class="row mt-3">
-    <!-- Cetak Faktur -->
+    <!-- PREVIEW Faktur (tampil dulu di browser) -->
     <div class="col-md-4 mb-3">
-        <a href="{{ route('cetak.faktur', $faktur->no_transaksi) }}" 
+        <a href="{{ route('preview.faktur', urlencode($faktur->no_transaksi)) }}" 
            target="_blank" 
-           class="btn btn-primary btn-block">
+           class="btn btn-info btn-block">
             <i class="fas fa-file-invoice"></i> Cetak Faktur
         </a>
     </div>

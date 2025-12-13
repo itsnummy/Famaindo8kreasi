@@ -44,7 +44,7 @@
                                     <td><strong>{{ $item->no_transaksi }}</strong></td>
                                     <td>{{ \Carbon\Carbon::parse($item->tgl_jt)->format('d/m/Y') }}</td>
                                     <td>
-                                        <div>{{ $item->item_pesanan }}</div>
+                                        <div>{{ $item->kode_item }}</div>
                                     </td>
                                     <td class="text-right">
                                         <strong>Rp {{ number_format($item->total_akhir, 0, ',', '.') }}</strong>

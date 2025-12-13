@@ -64,6 +64,11 @@
 
                     <div class="form-group">
                         <label>Item Pesanan *</label>
+                        <textarea class="form-control" name="kode_item" placeholder="Nama Item" required>{{ $data->kode_item}}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deskripsi Item *</label>
                         <textarea class="form-control" name="item_pesanan" placeholder="Deskripsi Pesanan" required>{{ $data->item_pesanan }}</textarea>
                     </div>
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\faktur_PenjualanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CetakController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -50,7 +51,8 @@ Route::middleware(['auth'])->group(function () {
     
     // Cetak
     Route::prefix('cetak')->group(function () {
-        Route::get('/faktur/{no_transaksi}', [faktur_penjualanController::class, 'cetakFaktur'])->name('cetak.faktur');
+        Route::get('/faktur/{no_transaksi}', [CetakController::class, 'cetakFaktur'])->name('cetak.faktur');
+        Route::get('/preview/faktur/{no_transaksi}', [CetakController::class, 'previewFaktur'])->name('preview.faktur');
         Route::get('/surat-jalan/{no_transaksi}', [faktur_penjualanController::class, 'cetakSuratJalan'])->name('cetak.surat-jalan');
     });
 });

@@ -13,7 +13,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nomor Transaksi *</label>
-                                <input type="text" class="form-control" name="no_transaksi" placeholder="nomor transaksi" required>
+                                <input type="text" class="form-control" name="" placeholder="Nomor Transaksi (tidak bisa diubah setelah tersimpan)" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -41,7 +41,7 @@
 
                     <div class="form-group">
                         <label>Alamat</label>
-                        <textarea class="form-control" name="alamat" placeholder="alamat" rows="2"></textarea>
+                        <textarea class="form-control" name="alamat" placeholder="Alamat Lengkap" rows="2"></textarea>
                     </div>
 
                     <div class="row">
@@ -61,6 +61,11 @@
 
                     <div class="form-group">
                         <label>Item Pesanan *</label>
+                        <textarea class="form-control" name="kode_item" placeholder="Nama Item (cth: Tas Ransel KVS)" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deskripsi Item *</label>
                         <textarea class="form-control" name="item_pesanan" placeholder="Deskripsi Pesanan" required></textarea>
                     </div>
 
@@ -74,7 +79,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Harga Satuan (Rp) *</label>
-                                <input type="number" class="form-control" id="harga_satuan" name="harga_satuan" placeholder="Harga Satuan" min="0" required>
+                                <input type="number" class="form-control" id="harga_satuan" name="harga_satuan" placeholder="Harga Satuan Item" min="0" required>
                             </div>
                         </div>
                         <div class="col-md-4">
