@@ -12,40 +12,46 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        // Data untuk default view (hari ini)
-        $today = Carbon::today();
-        
-        // Total pemesanan
-        $totalPemesanan = faktur_penjualan::count();
-        
-        // Pemesanan dengan status progress (jika ada kolom status)
-        $pemesananProgress = faktur_penjualan::where('status', 'progress')->count();
-        
-        // Hitung lunas/belum lunas berdasarkan kwitansi
-        $fakturs = faktur_penjualan::with('kwitansi')->get();
-        $pembayaranLunas = 0;
-        $pembayaranBelumLunas = 0;
-        
-        foreach ($fakturs as $faktur) {
-            $totalDibayar = $faktur->kwitansi->sum('sejumlah');
-            if ($totalDibayar >= $faktur->total_akhir) {
-                $pembayaranLunas++;
-            } else {
-                $pembayaranBelumLunas++;
-            }
+{
+    // Data untuk default view (hari ini)
+    $today = Carbon::today();
+    
+    // Total pemesanan
+    $totalPemesanan = faktur_penjualan::count();
+    
+    // Pemesanan dengan status progress (jika ada kolom status)
+    $pemesananProgress = faktur_penjualan::where('status', 'progress')->count();
+    
+    // Hitung lunas/belum lunas berdasarkan kwitansi
+    $fakturs = faktur_penjualan::with('kwitansi')->get();
+    $pembayaranLunas = 0;
+    $pembayaranBelumLunas = 0;
+    
+    foreach ($fakturs as $faktur) {
+        $totalDibayar = $faktur->kwitansi->sum('sejumlah');
+        if ($totalDibayar >= $faktur->total_akhir) {
+            $pembayaranLunas++;
+        } else {
+            $pembayaranBelumLunas++;
         }
-        
-        // Untuk tampilan dashboard default (tidak perlu data lengkap)
-        $data = [
-            'totalPemesanan' => $totalPemesanan,
-            'pemesananProgress' => $pemesananProgress,
-            'pembayaranLunas' => $pembayaranLunas,
-            'pembayaranBelumLunas' => $pembayaranBelumLunas,
-        ];
-        
-        return view('dashboard', $data);
     }
+    
+    // Ambil data dari method yang sudah ada
+    $chartDataResponse = $this->getOrderChartData();
+    $chartDataArray = $chartDataResponse->getData();
+    
+
+    $data = [
+        'totalPemesanan' => $totalPemesanan,
+        'pemesananProgress' => $pemesananProgress,
+        'pembayaranLunas' => $pembayaranLunas,
+        'pembayaranBelumLunas' => $pembayaranBelumLunas, 
+        'chartLabels' => $chartDataArray->labels ?? [], 
+        'chartData' => $chartDataArray->data ?? [], 
+    ];
+    
+    return view('dashboard', $data);
+}
     
     public function filterData(Request $request)
     {
@@ -215,4 +221,29 @@ class DashboardController extends Controller
             'pemesananTerlambat'
         );
     }
+
+    // Di DashboardController
+public function getOrderChartData()
+{
+    $endDate = Carbon::today();
+    $startDate = Carbon::today()->subDays(13); // 14 hari termasuk hari ini
+    
+    $dates = [];
+    $orders = [];
+    
+    for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+        $dateString = $date->format('Y-m-d');
+        $dates[] = $date->format('d M'); // Format: 01 Jan
+        
+        // Hitung pesanan per hari
+        $orderCount = faktur_penjualan::whereDate('tanggal', $dateString)->count();
+        $orders[] = $orderCount;
+    }
+    
+    return response()->json([
+        'labels' => $dates,
+        'data' => $orders
+    ]);
+}
+
 }

@@ -13,7 +13,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nomor Transaksi *</label>
-                                <input type="text" class="form-control" name="no_transaksi" placeholder="Nomor Transaksi (tidak bisa diubah setelah tersimpan)" required>
+                                <input type="text" class="form-control" name="no_transaksi" placeholder="xxxx-xx-xxx-xxxx" required>
                             </div>
                         </div>
                         <div class="col-md-6">

@@ -5,6 +5,7 @@
         <h1 class="h3 mb-0 text-gray-800">Selamat Datang, Admin!</h1>
     </div>
 
+    <!-- Row 1: Statistik Cards -->
     <div class="row">
         <!-- Card 1: Total Pemesanan -->
         <div class="col-xl-3 col-md-6 mb-4">
@@ -134,10 +135,37 @@
             </div>
         </div>
     </div>
+
+    <div class="row mb-4">
+        <!-- Chart 14 Hari -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Pemesanan 14 Hari Terakhir</h6>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            <i class="fas fa-calendar-alt"></i> Rentang
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item chart-filter-btn" href="#" data-days="7">7 Hari</a>
+                            <a class="dropdown-item chart-filter-btn" href="#" data-days="14">14 Hari</a>
+                            <a class="dropdown-item chart-filter-btn" href="#" data-days="30">30 Hari</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="orderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 </div>
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 $(document).ready(function() {
     // Mapping card ke tipe data
@@ -160,8 +188,7 @@ $(document).ready(function() {
     function formatNumber(num) {
         return new Intl.NumberFormat('id-ID').format(num);
     }
-    
-    // Event handler untuk semua filter button
+
     $('.filter-btn').click(function(e) {
         e.preventDefault();
         
@@ -170,7 +197,6 @@ $(document).ready(function() {
         const cardType = cardTypes[cardId];
         const filterDisplay = filterTexts[filter];
         
-        // Tampilkan loading
         const cardValue = $('#cardValue' + cardId);
         cardValue.html('<span class="spinner-border spinner-border-sm"></span>');
         
@@ -204,10 +230,119 @@ $(document).ready(function() {
     for (let i = 1; i <= 4; i++) {
         const savedFilter = localStorage.getItem('card_' + i + '_filter');
         if (savedFilter) {
-            // Trigger click pada filter yang disimpan
             $(`.filter-btn[data-card="${i}"][data-filter="${savedFilter}"]`).click();
         }
     }
+    
+    // Inisialisasi Grafik
+    var orderChart;
+    function initChart(labels, data) {
+        var ctx = document.getElementById('orderChart').getContext('2d');
+        
+        if (orderChart) {
+            orderChart.destroy();
+        }
+        
+        orderChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Pemesanan',
+                    data: data,
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: '#fff',
+                    pointRadius: 4,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        },
+                        grid: {
+                            display: true
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Pesanan: ' + context.parsed.y;
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest'
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+    
+    // Load data chart awal (14 hari)
+    const initialLabels = @json($chartLabels ?? []);
+    const initialData = @json($chartData ?? []);
+    
+    if (initialLabels.length > 0 && initialData.length > 0) {
+        initChart(initialLabels, initialData);
+    } else {
+        // Tampilkan pesan jika tidak ada data
+        $('#orderChart').closest('.card-body').html('<div class="text-center text-muted py-5"><p>Belum ada data pemesanan</p></div>');
+    }
+    
+    // Filter chart berdasarkan hari
+    $('.chart-filter-btn').click(function(e) {
+        e.preventDefault();
+        const days = $(this).data('days');
+        
+        $.ajax({
+            url: '{{ route("dashboard.chart") }}',
+            type: 'GET',
+            data: { days: days },
+            success: function(response) {
+                if (response.labels && response.data) {
+                    initChart(response.labels, response.data);
+                    
+                    // Update ringkasan
+                    const total = response.data.reduce((a, b) => a + b, 0);
+                    const average = response.data.length > 0 ? total / response.data.length : 0;
+                    const max = response.data.length > 0 ? Math.max(...response.data) : 0;
+                    const min = response.data.length > 0 ? Math.min(...response.data) : 0;
+                    
+                    $('#total14Hari').text(total);
+                    $('#rataRataHari').text(average.toFixed(1));
+                    $('#tertinggi').text(max);
+                    $('#terendah').text(min);
+                }
+            },
+            error: function() {
+                alert('Gagal memuat data chart');
+            }
+        });
+    });
+      
 });
 </script>
 @endpush

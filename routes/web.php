@@ -22,7 +22,8 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard dengan controller
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/filter', [DashboardController::class, 'filterData'])->name('dashboard.filter');
-    
+    Route::get('/dashboard/chart-data', [DashboardController::class, 'getOrderChartData'])->name('dashboard.chart');
+
     // User Management
     Route::resource('users', UserController::class);
     
@@ -59,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/semuakwitansi/{no_transaksi}', [CetakController::class, 'cetakSemuaKwitansi'])->name('cetak.semuakwitansi');
     });
 });
+
 
 Route::fallback(function () {
     return redirect('/dashboard');
