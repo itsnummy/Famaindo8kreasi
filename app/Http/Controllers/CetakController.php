@@ -74,49 +74,12 @@ class CetakController extends Controller
         }
     }
     
-    // Fungsi terbilang
-    private function terbilang($angka)
-    {
-        if ($angka == 0) return 'nol';
-        
-        $bilangan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
-        
-        if ($angka < 12) {
-            return $bilangan[$angka];
-        } elseif ($angka < 20) {
-            return $bilangan[$angka - 10] . ' belas';
-        } elseif ($angka < 100) {
-            $hasil_bagi = floor($angka / 10);
-            $hasil_mod = $angka % 10;
-            return trim(sprintf('%s puluh %s', $bilangan[$hasil_bagi], $bilangan[$hasil_mod]));
-        } elseif ($angka < 200) {
-            return sprintf('seratus %s', $this->terbilang($angka - 100));
-        } elseif ($angka < 1000) {
-            $hasil_bagi = floor($angka / 100);
-            $hasil_mod = $angka % 100;
-            return trim(sprintf('%s ratus %s', $bilangan[$hasil_bagi], $this->terbilang($hasil_mod)));
-        } elseif ($angka < 2000) {
-            return trim(sprintf('seribu %s', $this->terbilang($angka - 1000)));
-        } elseif ($angka < 1000000) {
-            $hasil_bagi = floor($angka / 1000);
-            $hasil_mod = $angka % 1000;
-            return sprintf('%s ribu %s', $this->terbilang($hasil_bagi), $this->terbilang($hasil_mod));
-        } elseif ($angka < 1000000000) {
-            $hasil_bagi = floor($angka / 1000000);
-            $hasil_mod = $angka % 1000000;
-            return trim(sprintf('%s juta %s', $this->terbilang($hasil_bagi), $this->terbilang($hasil_mod)));
-        }
-        
-        return 'jumlah terlalu besar';
-    }
-    
-    // Tambahkan fungsi format rupiah jika diperlukan
+    // Fungsi format rupiah jika diperlukan
     private function formatRupiah($angka)
     {
         return number_format($angka, 0, ',', '.');
     }
 
-    // Preview Surat Jalan
     public function previewSuratJalan($no_transaksi)
     {
         $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
@@ -131,7 +94,6 @@ class CetakController extends Controller
         return view('faktur_penjualan.cetak.suratjalan', $data);
     }
 
-    // Cetak/Download PDF Surat Jalan
     public function cetakSuratJalan($no_transaksi)
     {
         $faktur = faktur_penjualan::where('no_transaksi', $no_transaksi)->firstOrFail();
@@ -152,38 +114,35 @@ class CetakController extends Controller
 
     public function previewKwitansi($id)
     {
-       
         $kwitansi = Kwitansi::with('faktur')->findOrFail($id);
         $faktur = $kwitansi->faktur;
         
         $data = [
             'faktur' => $faktur,
             'kwitansi' => $kwitansi,
-            'terbilang' => $faktur->terbilang ?? $this->terbilang($kwitansi->sejumlah),
-            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $faktur->tanggal, 'long'),
+            'terbilang' => $this->terbilang($kwitansi->sejumlah),
+            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $kwitansi->created_at, 'long'),
             'is_preview' => true,
         ];
         
         return view('faktur_penjualan.cetak.kwitansi', $data);
     }
 
-   
     public function cetakKwitansi($id)
     {
-        // Ambil data kwitansi berdasarkan ID
         $kwitansi = Kwitansi::with('faktur')->findOrFail($id);
         $faktur = $kwitansi->faktur;
         
         $data = [
             'faktur' => $faktur,
             'kwitansi' => $kwitansi,
-            'terbilang' => $faktur->terbilang ?? $this->terbilang($kwitansi->sejumlah),
-            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $faktur->tanggal, 'long'),
+            'terbilang' => $this->terbilang($kwitansi->sejumlah),
+            'tanggal_formatted' => $this->formatTanggal($kwitansi->tanggal ?? $kwitansi->created_at, 'long'),
             'is_preview' => false,
         ];
         
         $pdf = PDF::loadView('faktur_penjualan.cetak.kwitansi', $data)
-                ->setPaper('a5', 'portrait')
+                ->setPaper([0, 0, 603.78, 306.14], 'portrait')
                 ->setOption('defaultFont', 'Arial');
         
         return $pdf->download('Kwitansi-' . $kwitansi->id . '.pdf');
@@ -206,23 +165,30 @@ class CetakController extends Controller
         if ($faktur->kwitansi->isEmpty()) {
             return back()->with('error', 'Tidak ada kwitansi untuk ditampilkan.');
         }
+
+        foreach ($faktur->kwitansi as $k) {
+        $k->terbilang_formatted = $this->terbilang($k->sejumlah);
+    }
         
         $data = [
             'faktur' => $faktur,
             'kwitansiList' => $faktur->kwitansi,
-            'is_preview' => true,
+            'is_preview' => false,
         ];
         
         return view('faktur_penjualan.cetak.semuakwitansi', $data);
     }
 
-    // DOWNLOAD PDF Semua Kwitansi
     public function cetakSemuaKwitansi($no_transaksi)
     {
         $faktur = faktur_penjualan::with('kwitansi')->where('no_transaksi', $no_transaksi)->firstOrFail();
         
         if ($faktur->kwitansi->isEmpty()) {
             return back()->with('error', 'Tidak ada kwitansi untuk dicetak.');
+        }
+
+           foreach ($faktur->kwitansi as $k) {
+            $k->terbilang_formatted = $this->terbilang($k->sejumlah);
         }
         
         $data = [
@@ -232,10 +198,47 @@ class CetakController extends Controller
         ];
         
         $pdf = PDF::loadView('faktur_penjualan.cetak.semuakwitansi', $data)
-                ->setPaper('a5', 'portrait')
-                ->setOption('defaultFont', 'Arial');
+            ->setPaper([0, 0, 603.78, 306.14], 'portrait')
+            ->setOption('defaultFont', 'Arial')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true); 
         
         return $pdf->download('SemuaKwitansi-' . $no_transaksi . '.pdf');
     }
+
+
+    private function penyebut($nilai) {
+        $nilai = abs($nilai);
+        $huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
+        $temp = "";
         
-} 
+        if ($nilai < 12) {
+            $temp = " ". $huruf[$nilai];
+        } else if ($nilai < 20) {
+            $temp = $this->penyebut($nilai - 10). " Belas";
+        } else if ($nilai < 100) {
+            $temp = $this->penyebut($nilai/10)." Puluh". $this->penyebut($nilai % 10);
+        } else if ($nilai < 200) {
+            $temp = " Seratus" . $this->penyebut($nilai - 100);
+        } else if ($nilai < 1000) {
+            $temp = $this->penyebut($nilai/100) . " Ratus" . $this->penyebut($nilai % 100);
+        } else if ($nilai < 2000) {
+            $temp = " Seribu" . $this->penyebut($nilai - 1000);
+        } else if ($nilai < 1000000) {
+            $temp = $this->penyebut($nilai/1000) . " Ribu" . $this->penyebut($nilai % 1000);
+        } else if ($nilai < 1000000000) {
+            $temp = $this->penyebut($nilai/1000000) . " Juta" . $this->penyebut($nilai % 1000000);
+        }
+        return $temp;
+    }
+
+   
+    public function terbilang($nilai) {
+        if($nilai < 0) {
+            $hasil = "minus ". trim($this->penyebut($nilai));
+        } else {
+            $hasil = trim($this->penyebut($nilai));
+        }     		
+        return $hasil . " Rupiah";
+    }
+}

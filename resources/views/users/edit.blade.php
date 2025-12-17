@@ -51,7 +51,7 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update
+                                <i class="fas fa-save"></i> Update Data
                             </button>
                             <a href="{{ route('users.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Kembali

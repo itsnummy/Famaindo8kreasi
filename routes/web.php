@@ -19,12 +19,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Dashboard dengan controller
+    // Dashboard 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/filter', [DashboardController::class, 'filterData'])->name('dashboard.filter');
     Route::get('/dashboard/chart-data', [DashboardController::class, 'getOrderChartData'])->name('dashboard.chart');
 
-    // User Management
+    // User 
     Route::resource('users', UserController::class);
     
     // Faktur Penjualan
@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelola-pembayaran', [faktur_penjualanController::class, 'indexKelolaPembayaran'])
     ->name('faktur_penjualan.kelolabayar');
 
-// Route untuk DETAIL satu faktur (tabs)
+    // Detail Kelola Pembayaran
     Route::get('/faktur_penjualan/kelola/{id}', [faktur_penjualanController::class, 'kelola'])
     ->name('faktur_penjualan.kelola'); 
     

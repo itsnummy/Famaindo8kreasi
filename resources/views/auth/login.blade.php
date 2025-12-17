@@ -13,11 +13,24 @@
                         </div>
                         
                         <!-- Judul -->
-                
                         <p class="mb-0" style="opacity: 0.9;"> Login Admin Penjualan Tas Custom</p>
                     </div>
                     
                     <div class="card-body p-4 p-md-5">
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
+
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
                        
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
@@ -29,11 +42,17 @@
                                     type="text" 
                                     id="login"
                                     name="login" 
-                                    class="form-control" 
+                                    class="form-control @error('login') is-invalid @enderror" 
                                     placeholder="Email atau username Anda" 
                                     required 
                                     autofocus
+                                    value="{{ old('login') }}"
                                 >
+                                @error('login')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             
                             <!-- Password -->
@@ -43,10 +62,15 @@
                                     type="password" 
                                     id="password"
                                     name="password" 
-                                    class="form-control" 
+                                    class="form-control @error('password') is-invalid @enderror" 
                                     placeholder="Masukkan password" 
                                     required
                                 >
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             
                             <!-- Submit Button -->
@@ -54,7 +78,6 @@
                                 Login
                             </button>
                             
-                        
                         </form>
                     </div>
                 </div>

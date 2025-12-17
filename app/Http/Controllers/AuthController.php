@@ -33,7 +33,9 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return back()->withErrors([
+           return back()
+        ->withInput($request->only('login'))
+        ->withErrors([
             'login' => 'Email/username atau password salah.',
         ]);
     }
