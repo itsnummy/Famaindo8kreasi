@@ -142,7 +142,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Pemesanan 14 Hari Terakhir</h6>
-                    <div class="dropdown">
+                   <!-- <div class="dropdown">
                         <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
                             <i class="fas fa-calendar-alt"></i> Rentang
                         </button>
@@ -151,7 +151,7 @@
                             <a class="dropdown-item chart-filter-btn" href="#" data-days="14">14 Hari</a>
                             <a class="dropdown-item chart-filter-btn" href="#" data-days="30">30 Hari</a>
                         </div>
-                    </div>
+                    </div>!-->
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
