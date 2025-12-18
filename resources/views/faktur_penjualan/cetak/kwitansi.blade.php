@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Semua Kwitansi - {{ $faktur->no_transaksi }}</title>
+    <title>Kwitansi - {{ $faktur->no_transaksi }}</title>
     
     <style>
-        /* Setup Kertas: 603.78pt x 306.14pt (21.3cm x 10.8cm) */
+        /* Ukuran dalam points: 603.78pt x 306.14pt (21.3cm x 10.8cm) */
         @page {
-            size: 603.78pt 306.14pt; /* Ukuran dalam points sesuai DomPDF */
+            size: 603.78pt 306.14pt;
             margin: 0;
         }
 
@@ -17,88 +17,116 @@
             font-size: 10px;
             line-height: 1.2;
             color: #000;
-            margin: 0;
+            margin: 14.17pt 14.17pt 10pt 14.17pt; /* Top, Right, Bottom, Left */
             padding: 0;
-            background: #fff;
-            width: 603.78pt;
-            height: 306.14pt;
-        }
-
-        /* Container per Kwitansi */
-        .kwitansi-container {
-            width: 603.78pt;
-            height: 306.14pt;
-            padding: 14.17pt; /* 5mm = 14.17pt */
+            width: 575.44pt;
+            height: 282.14pt; /* Sesuaikan dengan margin bottom yang lebih kecil */
             box-sizing: border-box;
-            position: relative;
-            page-break-inside: avoid;
-            overflow: hidden;
         }
 
-        /* HEADER & LOGO */
+        /* Container Utama */
+        .kwitansi-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER & LOGO - DIPERBAIKI */
         .header-kwitansi {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5.67pt; /* 2mm = 5.67pt */
-            height: 28.35pt; /* 10mm = 28.35pt */
+            margin-bottom: 8.5pt; /* 3mm */
+            height: 31.5pt; /* Diperbesar sedikit */
+            flex-shrink: 0;
         }
 
+        /* KIRI: Logo + Nama Perusahaan */
         .header-left {
             display: flex;
             align-items: center;
-            width: 45%;
+            width: 55%; /* Diperbesar */
+            gap: 8.5pt; /* Jarak antara logo dan teks */
         }
 
-        .header-right {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 7.09pt; /* 2.5mm = 7.09pt */
-            width: 55%;
+        .logo-famaindo {
+            width: 70pt !important; /* Diperbesar */
+            height: 35pt !important;
+            object-fit: contain;
+            flex-shrink: 0;
         }
-        
+
         .company-name-kwitansi {
             font-family: Arial, sans-serif;
             font-weight: bold;
             color: #7d0b0b;
-            font-size: 12px;
-            margin-left: 3.54pt; /* 1.25mm = 3.54pt */
+            font-size: 13px !important; /* Sedikit lebih besar */
+            line-height: 1.1;
+            white-space: nowrap;
         }
-        
+
+        /* KANAN: Dua logo lainnya */
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 14.17pt; /* Jarak diperbesar (5mm) */
+            width: 45%; /* Dikurangi */
+            padding-right: 0; /* Hapus padding kanan */
+        }
+
+        .logo-fama {
+            width: 63.78pt !important; /* Diperbesar */
+            height: 31.5pt !important;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .logo-audia {
+            width: 77.95pt !important; /* Diperbesar */
+            height: 31.5pt !important;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        /* JUDUL */
         .title {
             text-align: center;
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 8.5pt; /* 3mm = 8.5pt */
-            padding-bottom: 2.13pt; /* 0.75mm = 2.13pt */
+            margin: 5.67pt 0 8.5pt 0; /* Atur margin atas-bawah */
+            padding-bottom: 2.13pt;
+            flex-shrink: 0;
+            border-bottom: 0.71pt solid #7d0b0b; /* Garis merah untuk estetika */
         }
 
-        /* TABLE */
+        /* TABLE BODY KWITANSI */
         .kwitansi-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 10px;
-            margin-bottom: 5.67pt; /* 2mm = 5.67pt */
+            flex-grow: 1;
+            margin-top: 5.67pt; /* Tambah margin atas */
         }
         
         .kwitansi-table tr {
-            height: 16.54pt; /* 5.83mm = 16.54pt */
+            height: 16.54pt;
         }
         
         .kwitansi-table td {
-            padding: 2.83pt 0; /* 1mm = 2.83pt */
+            padding: 2.83pt 0;
             vertical-align: top;
         }
         
         .kwitansi-label {
-            width: 85.04pt; /* 30mm = 85.04pt */
+            width: 85.04pt;
             font-weight: bold;
-            padding-left: 3.54pt; /* 1.25mm = 3.54pt */
+            padding-left: 5.67pt; /* Ditambah */
         }
         
         .kwitansi-separator {
-            width: 7.09pt; /* 2.5mm = 7.09pt */
+            width: 7.09pt;
             text-align: center;
         }
         
@@ -106,96 +134,93 @@
             flex: 1;
         }
 
+        /* Kotak Isian */
         .input-box {
-            border: 0.71pt solid #ccc; /* 0.25mm = 0.71pt */
-            padding: 1.42pt 3.54pt; /* 0.5mm = 1.42pt, 1.25mm = 3.54pt */
-            min-height: 11.34pt; /* 4mm = 11.34pt */
+            border: 0.71pt solid #ccc;
+            padding: 2.13pt 4.25pt; /* Padding diperbesar */
+            min-height: 12.75pt; /* Sedikit lebih tinggi */
             width: 95%;
             display: inline-block;
             box-sizing: border-box;
+            background: #f9f9f9; /* Warna latar sedikit */
         }
 
+        /* Kotak Khusus Jumlah */
         .amount-box {
-            border: 0.71pt solid #ccc;
-            padding: 1.42pt 3.54pt;
-            min-height: 11.34pt;
-            width: 70.87pt; /* 25mm = 70.87pt */
+            border: 0.71pt solid #000000ff; /* Border merah */
+            padding: 2.13pt 4.25pt;
+            min-height: 12.75pt;
+            width: 85.04pt; /* Diperbesar (30mm) */
             text-align: right;
             font-weight: bold;
             display: inline-block;
             box-sizing: border-box;
+            background: #fff;
+            color: #000000ff; /* Warna merah */
         }
         
         .text-bold { 
             font-weight: bold; 
         }
 
-        /* FOOTER */
+        /* FOOTER - KOSONG */
         .footer-kwitansi {
-            margin-top: 8.5pt; /* 3mm = 8.5pt */
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            position: absolute;
-            bottom: 14.17pt; /* 5mm = 14.17pt */
-            left: 14.17pt;
-            right: 14.17pt;
+            margin-top: 8.5pt;
+            height: 21.26pt; /* Dikurangi (7.5mm) */
+            flex-shrink: 0;
         }
-        
-        .signature-box {
-            text-align: center;
-            width: 106.3pt; /* 37.5mm = 106.3pt */
-        }
-        
+
+        /* TANGGAL */
         .date-info {
+            position: absolute;
+            bottom: 14.17pt;
+            right: 14.17pt;
             font-size: 9px;
-            text-align: center;
-            margin-bottom: 2.13pt; /* 0.75mm = 2.13pt */
+            font-style: italic;
+            color: #666;
         }
-        
-        .sig-space {
-            height: 0.71pt; /* 0.25mm = 0.71pt */
-            border-bottom: 0.71pt solid #000;
-            margin: 14.17pt auto 2.83pt; /* 5mm = 14.17pt, 1mm = 2.83pt */
-            width: 85.04pt; /* 30mm = 85.04pt */
-        }
-        
-        /* PENTING: Untuk memastikan halaman baru */
-        .page-break {
-            page-break-before: always;
-        }
-        
-        /* Kontrol untuk print */
+
+        /* Print specific styles */
         @media print {
-            .kwitansi-container {
-                page-break-after: always;
+            body {
+                margin: 14.17pt 14.17pt 10pt 14.17pt;
+                width: 575.44pt;
+                height: 282.14pt;
             }
-            .kwitansi-container:last-child {
-                page-break-after: auto;
+            
+            .input-box {
+                background: transparent; /* Transparent saat print */
             }
         }
 
     </style>
 </head>
-<body>
-
-    @foreach($kwitansiList as $index => $kwitansi)
-    
-    @if($index > 0)
-    <div style="page-break-before: always;"></div>
-    @endif
-    
+<body {{ !$is_preview ? 'onload="window.print()"' : '' }}>
     <div class="kwitansi-container">
         
         <div class="header-kwitansi">
+            <!-- KIRI: Logo Famaindo + Nama Perusahaan -->
             <div class="header-left">
-                <img src="{{ asset('img/logomerah.png') }}" alt="Logo" style="width: 56.69pt; height: 28.35pt; object-fit: contain; margin-right: 7.09pt;">
-                <div class="company-name-kwitansi">PT. Famaindo Delapan Kreasi</div>
+                <img
+                    src="{{ asset('img/logomerah.png') }}"
+                    alt="Logo Famaindo"
+                    class="logo-famaindo"
+                >
+                <div class="company-name-kwitansi">PT. Famaindo<br>Delapan Kreasi</div>
             </div>
             
+            <!-- KANAN: Dua logo lainnya -->
             <div class="header-right">
-                <img src="{{ asset('img/famamerah.png') }}" alt="Fama" style="width: 49.61pt; height: 28.35pt; object-fit: contain;">
-                <img src="{{ asset('img/audia.png') }}" alt="Audia" style="width: 63.78pt; height: 28.35pt; object-fit: contain;">
+                <img
+                    src="{{ asset('img/famamerah.png') }}"
+                    alt="Logo Fama"
+                    class="logo-fama"
+                >
+                <img
+                    src="{{ asset('img/audia.png') }}"
+                    alt="Logo Audia"
+                    class="logo-audia"
+                >
             </div>
         </div>
 
@@ -207,7 +232,7 @@
                 <td class="kwitansi-separator">:</td>
                 <td class="kwitansi-value">
                     <div class="input-box" style="width: 177.17pt;">
-                        {{ $kwitansi->no_kwitansi ?? str_replace('-', '/', $faktur->no_transaksi) . '-' . ($index + 1) }}
+                        {{ $kwitansi->no_kwitansi ?? str_replace('-', '/', $faktur->no_transaksi) }}
                     </div>
                 </td>
             </tr>
@@ -225,7 +250,7 @@
                 <td class="kwitansi-separator">:</td>
                 <td class="kwitansi-value">
                     <div class="input-box">
-                       (<span class="text-bold">{{ $kwitansi->terbilang_formatted }}</span>)
+                        (<span class="text-bold">{{ $terbilang ?? $kwitansi->terbilang_formatted }}</span>)
                     </div>
                 </td>
             </tr>
@@ -243,34 +268,27 @@
                 <td class="kwitansi-separator">:</td>
                 <td class="kwitansi-value">
                     <div class="amount-box">
-                        Rp. {{ number_format($kwitansi->sejumlah, 0, ',', '.') }}
+                       Rp {{ number_format($kwitansi->sejumlah ?? $faktur->total_akhir, 0, ',', '.') }}
                     </div>
                 </td>
             </tr>
         </table>
 
         <div class="footer-kwitansi">
-            <div style="width: 50%;"></div>
-            <div class="signature-box">
-                <div class="date-info">
-                    {{ date('d F Y', strtotime($kwitansi->created_at ?? now())) }}
-                </div>
-                <div class="sig-space"></div>
-                <div style="font-size: 9px;">
-                    Penerima
-                </div>
-            </div>
+            <!-- Kosong -->
+        </div>
+        
+        <!-- Tanggal di footer -->
+        <div class="date-info">
+            {{ $tanggal_formatted ?? date('d F Y', strtotime($kwitansi->tanggal ?? $kwitansi->created_at)) }}
         </div>
 
     </div>
-    @endforeach
 
     <script>
-        // Auto print saat halaman selesai load
         window.onload = function() {
             window.print();
         }
     </script>
-
 </body>
 </html>
